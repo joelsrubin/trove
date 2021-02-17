@@ -1,7 +1,8 @@
 const path = require('path');
 module.exports = {
-  entry: './client/index.js',
+  entry: './client/src/index.js',
   mode: "development",
+  devtool: 'inline-source-map',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'client/public'), //this is the folder you want to save your bundle in - feel free to change
