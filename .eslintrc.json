@@ -1,0 +1,6 @@
+{
+  "extends": "airbnb",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
+}
