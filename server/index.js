@@ -2,10 +2,11 @@ const express = require("express");
 const app = express();
 const PORT = 8081;
 const path = require("path");
-const upload = require('./file-upload');
+// const upload = require('./file-upload');
 const db = require('../database/index')
-// const multer = require('multer');
-// const upload = multer({ dest: 'uploads/' });
+const multer = require('multer');
+const { storage } = require('../cloudinary');
+const upload = multer({storage});
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -28,6 +29,7 @@ app.get("/:username", (req, res) => {
 
 app.get("/:username/:collection", (req, res) => {
   //retrieve collection
+  console.log('getting collection')
   db.getCollection(
     req.params.username,
     req.params.collection,
@@ -37,12 +39,30 @@ app.get("/:username/:collection", (req, res) => {
 
 app.post("/newcollection", (req, res) => {
   //creates a collection
-  db.addCollection(req.body)
+  db.addCollection(req.body, (collections)=>res.send(collections))
+});
+
+app.put("/:username/:collection", upload.single('image'), (req, res) => {
+  // add item to a collection
+  console.log('got here')
+  const obj = req.body;
+  const img = req.file.path
+  obj.images = [img]
+  db.addItem(
+    req.params.username,
+    req.params.collection,
+    obj
+  )
   res.end()
 });
 
-app.put("/:username/:collection", (req, res) => {
-  //add item to a collection
+app.delete("/:username/:collection", (req, res) => {
+  //deletes a collection
+  db.deleteCollection(
+    req.params.username,
+    req.params.collection,
+    (collections)=>res.send(collections)
+  )
 });
 
 app.delete("/collection/:id/:itemId", (req, res) => {

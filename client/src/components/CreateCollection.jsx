@@ -23,20 +23,26 @@ class CreateCollection extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    const name = this.state.name;
     const metaData = {
       user: this.user,
-      name: this.state.name,
+      name: name
     }
-    axios.post(`/collection`,metaData)
+    this.setState({
+      name: ''
+    }, () => { this.props.addCollection(metaData) })
   }
-
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input type="text" name="name" onChange={this.handleChange} autoComplete="off"/>
+    <form onSubmit={this.handleSubmit}>
+        <label>
+        Add a new collection:
+        <input type="text" name="name" onChange={this.handleChange} autoComplete="off" value={this.state.name}/>
+        </label>
         <button type="submit">Submit</button>
-      </form>
+        </form>
+
     )
   }
 }
